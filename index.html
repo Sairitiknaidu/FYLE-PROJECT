@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Calculator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Custom CSS can go here */
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Tax Calculator</h1>
+    <form id="taxForm">
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <select class="form-control" id="age">
+          <option value="<40">&lt; 40</option>
+          <option value=">=40&<60">&ge; 40 &lt; 60</option>
+          <option value=">=60">&ge; 60</option>
+        </select>
+        <div class="error-icon" id="ageError"></div>
+      </div>
+      <div class="form-group">
+        <label for="income">Annual Income:</label>
+        <input type="number" class="form-control" id="income">
+        <div class="error-icon" id="incomeError"></div>
+      </div>
+      <div class="form-group">
+        <label for="extraIncome">Extra Income:</label>
+        <input type="number" class="form-control" id="extraIncome">
+        <div class="error-icon" id="extraIncomeError"></div>
+      </div>
+      <div class="form-group">
+        <label for="deductions">Deductions:</label>
+        <input type="number" class="form-control" id="deductions">
+        <div class="error-icon" id="deductionsError"></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Calculate Tax</button>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="resultModalLabel">Tax Calculation Result</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Result will be shown here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // JavaScript logic for form validation and tax calculation can go here
+    $(document).ready(function() {
+  // Hide error icons by default
+  $('.error-icon').hide();
+
+  // Form submission handler
+  $('#taxForm').submit(function(event) {
+    event.preventDefault();
+    calculateTax();
+  });
+
+  // Function to calculate tax
+  function calculateTax() {
+    var age = $('#age').val();
+    var income = parseFloat($('#income').val());
+    var extraIncome = parseFloat($('#extraIncome').val());
+    var deductions = parseFloat($('#deductions').val());
+
+    // Validation
+    var errors = false;
+    if (!age) {
+      $('#ageError').text('Age is required');
+      $('#ageError').show();
+      errors = true;
+    } else {
+      $('#ageError').hide();
+    }
+    if (isNaN(income)) {
+      $('#incomeError').text('Income must be a number');
+      $('#incomeError').show();
+      errors = true;
+    } else {
+      $('#incomeError').hide();
+    }
+    if (isNaN(extraIncome)) {
+      $('#extraIncomeError').text('Extra Income must be a number');
+      $('#extraIncomeError').show();
+      errors = true;
+    } else {
+      $('#extraIncomeError').hide();
+    }
+    if (isNaN(deductions)) {
+      $('#deductionsError').text('Deductions must be a number');
+      $('#deductionsError').show();
+      errors = true;
+    } else {
+      $('#deductionsError').hide();
+    }
+
+    if (errors) {
+      return; // Exit if there are validation errors
+    }
+
+    // Calculate tax
+    var taxableIncome = income + extraIncome - deductions;
+    var tax = 0;
+    if (taxableIncome > 800000) {
+      if (age === '<40') {
+        tax = 0.3 * (taxableIncome - 800000);
+      } else if (age === '>=40&<60') {
+        tax = 0.4 * (taxableIncome - 800000);
+      } else if (age === '>=60') {
+        tax = 0.1 * (taxableIncome - 800000);
+      }
+    }
+
+    // Show result in modal
+    $('#resultModal .modal-body').html('<p>Tax: ' + tax.toFixed(2) + ' Lakhs</p>');
+    $('#resultModal').modal('show');
+  }
+});
+
+  </script>
+</body>
+</html>
