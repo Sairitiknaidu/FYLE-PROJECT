@@ -1,0 +1,29 @@
+.error-icon {
+    color: red;
+    font-size: 18px;
+    margin-top: 5px;
+  }
+  
+  .error-icon::after {
+    content: "!";
+    position: absolute;
+    right: 5px;
+    top: 8px;
+  }
+  
+  .error-icon:hover::after {
+    position: relative;
+  }
+  
+  .error-icon:hover::after::before {
+    content: attr(data-error);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    top: -30px;
+    left: 20px;
+    z-index: 999;
+  }
+  
